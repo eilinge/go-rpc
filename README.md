@@ -13,3 +13,7 @@
 ## docker build
 
     docker build --tag=go-rpc .
+
+## docker run
+
+    docker run -it -p 8081:8081 go-rpc
