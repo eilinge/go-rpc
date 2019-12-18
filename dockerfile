@@ -9,6 +9,7 @@ RUN mkdir -p /go-rpc/proto
 
 WORKDIR /go-prc
 
+COPY ./vendor /go-rpc/vendor
 COPY ./proto/service.pb.go /go-rpc/proto
 COPY ./main.go /go-rpc
 
