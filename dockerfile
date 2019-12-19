@@ -1,15 +1,17 @@
 FROM golang:alpine as build-env
 
+LABEL auther=eilinge
+
 ENV GO111MODULE=on
+ENV GOPROXY=https://goproxy.io
 
 RUN apk update && apk add bash ca-certificates git gcc g++ libc-dev
 
 RUN mkdir /go-rpc
 RUN mkdir -p /go-rpc/proto
 
-WORKDIR /go-prc
+WORKDIR /go-rpc
 
-COPY ./vendor /go-rpc/vendor
 COPY ./proto/service.pb.go /go-rpc/proto
 COPY ./main.go /go-rpc
 

@@ -62,7 +62,7 @@ func main() {
 	flag.Parse()
 	id := sha256.Sum256([]byte(timestamp.String() + *name))
 
-	conn, err := grpc.Dial("localhost:8081", grpc.WithInsecure())
+	conn, err := grpc.Dial("47.101.187.227:8081", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("Couldnot connect to service: %v", err)
 	}
