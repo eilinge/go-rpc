@@ -17,6 +17,7 @@ import (
 	"google.golang.org/grpc"
 )
 
+// type BroadcastClient interface
 var client proto.BroadcastClient
 
 var wait *sync.WaitGroup
@@ -28,6 +29,8 @@ func init() {
 func connect(user *proto.User) error {
 	var streamerror error
 
+	// stream: reciver message and defines the client-side behavior of a streaming RPC.
+	// set connection status is active
 	stream, err := client.CreateStream(context.Background(), &proto.Connect{
 		User:   user,
 		Active: true,
@@ -37,6 +40,7 @@ func connect(user *proto.User) error {
 		return fmt.Errorf("connection failed :%v", err)
 	}
 
+	// start goroutine for each client reciver message
 	wait.Add(1)
 	go func(str proto.Broadcast_CreateStreamClient) {
 		defer wait.Done()
@@ -62,11 +66,13 @@ func main() {
 	flag.Parse()
 	id := sha256.Sum256([]byte(timestamp.String() + *name))
 
-	conn, err := grpc.Dial("47.101.187.227:8081", grpc.WithInsecure())
+	conn, err := grpc.Dial("localhost:8081", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("Couldnot connect to service: %v", err)
 	}
 
+	// get a client: broadcastClient(come true BroadcastClient interface)
+	// connect remote service
 	client = proto.NewBroadcastClient(conn)
 	user := &proto.User{
 		Id:   hex.EncodeToString(id[:]),
@@ -75,6 +81,7 @@ func main() {
 
 	connect(user)
 
+	// get message and Broadcast Message
 	wait.Add(1)
 	go func() {
 		defer wait.Done()
@@ -91,7 +98,6 @@ func main() {
 				break
 			}
 		}
-
 	}()
 
 	go func() {
